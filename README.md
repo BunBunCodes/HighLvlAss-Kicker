@@ -100,11 +100,4 @@ Notice the similarity between our files and the template in the previous section
 You may also spy the `.exe` file generated within your folder upon first running an `.hla` file. Technically, you can click on it to run the program, but it always closes as soon as you input data. It doesn't give any output. I'm not entirely sure what thats all about, hmmm... maybe future me will know `^-^`
 
 ### Warnings!
-Given that this is the first time Ive uploaded something to github, I haven't cleaned up my files and code. If you see folders that have a B attached to them, those are the versions that work properly. EXCEPT! for one where I foolishly forgot to add `ret()` call at the end of a procedure. That one will crash after performing its task correctly. Additionally there is one `.hla` file I never bothered to fix, I think it was called something like `smcFeeCalc.hla`?
-
-### Bunny's To-Do List
-
-* Add even more comments to ALL programs, except that one file
-* Rename files and folders to be more neat
-* Maybe delete files that don't need to be downloaded, consult with Koko
-* Finish and add notes in separate folder?
+Given that this is the first time Ive uploaded something to github, I haven't cleaned up my files and code. If you see folders that have a B attached to them, those are second attempts at homeworks that run properly. In short there are files that don't run properly but feel free to peruse through the files!
