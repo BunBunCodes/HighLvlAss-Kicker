@@ -1,0 +1,55 @@
+//File: altvalues.hla
+program altValues;
+#include ("stdlib.hhf")
+
+static
+n : int8;
+amt : int8 := 1;
+
+begin altValues;
+
+//Prompt the user
+stdout.put("Gimme data: ");
+stdin.get(n);
+//moving n to BL
+mov(n, BL);
+//moving amt to CH
+mov(amt, CH);
+//0 - sub, 1 - add
+mov(0, CL);
+stdout.put(n);
+
+ForLp:
+InitializeForLp:
+mov(1, DH);
+ForLpTerminationTest:
+cmp(DH, n);
+jnl ForLpDone;
+ForLpBody:
+stdout.put("_");
+
+//if statement
+cmp(CL, 0);
+je ThenLabel;
+jmp ElseLabel;
+ThenLabel:
+sub(CH, BL);
+stdout.puti8(BL);
+//setting CL to 1 for next loop
+mov(1, CL);
+add(1, CH);
+jmp ENDIFLabel;
+
+ElseLabel:
+add(CH, BL);
+stdout.puti8(BL);
+mov(0, CL);
+add(1, CH);
+ENDIFLabel:
+
+ForLpIncrement:
+add(1, DH);
+jmp ForLpTerminationTest;
+ForLpDone:
+
+end altValues;

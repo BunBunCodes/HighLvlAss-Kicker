@@ -1,0 +1,93 @@
+//File: same.hla
+program Same;
+#include("stdlib.hhf");
+static
+
+val1 : int16 := 0;
+val2 : int16 := 0;
+val3 : int16 := 0;
+val4 : int16 := 0;
+
+//Function theSame
+procedure theSame( w:int16; x:int16; y:int16; z:int16 ); @nodisplay; @noframe;
+static
+returnAddress : dword;
+
+begin theSame;
+//entry sequence
+//no registers to preserve
+
+//popping values off stack
+//increments of 32bits only
+pop(returnAddress);
+pop(z);
+pop(y);
+pop(x);
+pop(w);
+push(returnAddress);
+
+//first set of numbers
+mov(z, DX);
+sub(y, DX);
+cmp(DX, 0);
+je SetTrue;
+jmp SetFalse;
+
+SetTrue:
+mov(1, AL);
+jmp NextComp;
+SetFalse:
+mov(0, AL);
+jmp EndSequence;
+
+//second set of numbers
+NextComp:
+mov(x, CX);
+sub(w, CX);
+cmp(CX, 0);
+je EndSequence;
+jmp SetFalse;
+
+EndSequence:
+ret();
+
+end theSame;
+
+//Main program
+
+begin Same;
+
+//Prompt user
+stdout.put("Feed me W: ");
+stdin.get(val1);
+stdout.put("Feed me X: ");
+stdin.get(val2);
+stdout.put("Feed me Y: ");
+stdin.get(val3);
+stdout.put("Feed me Z: ");
+stdin.get(val4);
+
+//pushing values onto stack
+//increments of 32bits only
+push(val1);
+push(val2);
+push(val3);
+push(val4);
+
+call theSame;
+//this function leaves answer in AL
+cmp(AL, 1);
+je IsEqual;
+jmp NotEqual;
+
+IsEqual:
+stdout.put("Same. AL = 1");
+jmp EndProgram;
+
+NotEqual:
+stdout.put("Not the same. AL = 0");
+jmp EndProgram;
+
+EndProgram:
+
+end Same;

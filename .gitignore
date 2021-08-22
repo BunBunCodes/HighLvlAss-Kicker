@@ -1,0 +1,14 @@
+# Folders to ignore
+hla/*
+
+# File types to ignore
+*.asm
+*.bss.inc
+*.consts.inc
+*.data.inc
+*.exe
+*.extpub.inc
+*.link
+*.obj
+*.ro.inc
+.vs/

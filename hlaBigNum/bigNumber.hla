@@ -1,0 +1,44 @@
+//File: bignumber.hla
+program bigNumber;
+#include ("stdlib.hhf");
+
+static
+n : int8;
+
+begin bigNumber;
+
+//Prompt the user
+stdout.put("Input a decimal value to use as n: ");
+stdin.get(n);
+stdout.put("The big number is: ");
+
+//Odd nummbers, line 16
+ForLp:
+InitializeForLp:
+mov(1, BL);
+ForLpTerminationTest:
+cmp(BL, n);
+jg ForLpDone;
+ForLpBody:
+stdout.puti8(BL);
+ForLpIncrement:
+add(2, BL);
+jmp ForLpTerminationTest;
+ForLpDone:
+
+//Even numbers, line 30
+//Rewriting over values in BL since no longer needed
+ForLp2:
+InitializeForLp2:
+mov(2, BL);
+ForLpTerminationTest2:
+cmp(BL, n);
+jg ForLpDone2;
+ForLpBody2:
+stdout.puti8(BL);
+ForLpIncrement2:
+add(2, BL);
+jmp ForLpTerminationTest2;
+ForLpDone2:
+
+end bigNumber;

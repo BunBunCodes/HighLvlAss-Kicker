@@ -1,0 +1,83 @@
+//File: strLenFx.hla
+program strLenFx;
+#include("stdlib.hhf");
+#include("cs17string.hla");
+
+static
+stringData : dword;
+
+//Find the length of the string
+//register EAX will be used as a counter
+procedure strlen( baseStringAddress: dword ); @nodisplay; @noframe;
+static 
+retAddress : dword;
+wDXRegister  : word  := 0;	// preserve DX
+dEBXRegister : dword := 0;	// preserve EBX
+
+begin strlen;
+
+// entry sequence
+// preserve registers
+mov(EBX, dEBXRegister);
+mov(DX, wDXRegister);
+pop(retAddress);	   	// This is the return address 
+pop(EBX);			// This is the base address of the string
+// push back the return address
+push(retAddress);
+// preserve registers
+push(dEBXRegister);
+push(wDXRegister);
+
+// begin sub-task
+// count null-terminated string
+mov(0, DX);            	// EBX will be the address of string[i]
+CountLp:
+cmp([ EBX ], DH);
+je CountEndLp;
+inc(EAX);
+inc(EBX);
+jmp CountLp;
+CountEndLp:
+
+//leave count in EAX
+//restore registers used
+pop(DX);
+pop(EBX);
+ret();
+
+end strlen;
+
+begin strLenFx;
+stdout.put("Feed me: ");
+//this code allocates a string of size 80
+mov(@size(int8), AL);
+mov(80,BL);
+inc(BL);			//for null
+mul(BL);
+mov(0, EBX);
+mov(AX, BX);
+malloc(EBX);
+mov(EAX, stringData);
+
+//pushing values onto stack before calling gets
+mov(stringData, EAX);		
+push(EAX);			//pushing stringData
+mov(80, CX);
+push(CX);			//pushing size
+call gets;
+
+stdout.put("The String You Entered: ");
+mov(stringData, EAX);
+push(EAX);
+call puts;
+
+stdout.put(" Has Length = ");
+//initialize EAX before calling the function
+mov(0, EAX);
+mov(stringData, ECX);
+push(ECX);			//pushing stringData
+call strlen;			//calling procedure
+stdout.puti32(EAX);
+
+end strLenFx;
+

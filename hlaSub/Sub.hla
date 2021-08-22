@@ -1,0 +1,68 @@
+//File: Sub.hla
+program Subtraction;
+#include("stdlib.hhf");
+static
+
+val1 : int8;
+
+//Function subtracting
+procedure subtracting( value : int8 ); @nodisplay; @noframe;
+static
+returnAddress : dword;
+registerVal : dword;
+temp : int16;
+
+begin subtracting;
+//entry sequence
+//preserve registers
+mov(EBX, registerVal);
+//acquire parameteres on stack
+pop(returnAddress);
+pop(temp); 		//junk
+pop(temp);		//this is value
+mov(temp, BX);
+mov(BL, value);
+
+push(returnAddress);	//push back return address
+push(EDX);		//preserving registers -- EDX, EBX
+push(registerVal);
+
+mov(1, CL);		//answer stored here
+mov(2, DL);		//this is our counter
+WhileLp:
+WhileLpTermination:
+cmp(DL, value);		//is counter greater than value?
+jg WhileLpDone;
+WhileLpBody:
+sub(DL, CL);
+inc(DL);
+jmp WhileLp;
+WhileLpDone:
+
+//popping preserved registers
+pop(EBX);
+pop(EDX);
+//answer is in CL
+ret();
+end subtracting;
+
+//Main program
+begin Subtraction;
+
+//Prompt user
+stdout.put("Provide a number: ");
+stdin.get(val1);
+
+//only 16-bit values can be pushed
+mov(0, BX);
+mov(val1, BL);
+push(BX);		//pushing 16bits
+mov(0, BX);		//one last piece of junk ^-^
+push(BX);		//padding - 32bits
+
+call subtracting;
+stdout.put("subtracting(", val1, ") equals ");
+stdout.puti8(CL);
+stdout.put("!");
+
+end Subtraction;

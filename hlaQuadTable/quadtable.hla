@@ -1,0 +1,46 @@
+//File: quadtable.hla
+program quadTable;
+#include ( "stdlib.hhf" )
+
+static
+iVal : int32;
+
+begin quadTable;
+
+//Prompt the user
+stdout.put( "Give me a starting value: " );
+stdin.get( iVal );
+mov( iVal, EBX );
+stdout.put( "Quad Table", nl, iVal, ": " );
+
+//First row printing
+rol( 2, EBX );
+stdout.puti32( EBX );
+stdout.put( " " );
+rol( 2, EBX );
+stdout.puti32( EBX );
+
+//Second row printing
+add( 1, iVal );
+stdout.put( nl, iVal, ": " );
+mov(iVal, EBX);
+rol(2, EBX);
+stdout.puti32( EBX );
+stdout.put( " " );
+rol(2, EBX);
+stdout.puti32( EBX );
+
+//Third row printing
+add( 1, iVal );
+stdout.put( nl, iVal, ": " );
+mov(iVal, EBX);
+rol(2, EBX);
+stdout.puti32( EBX );
+stdout.put( " " );
+rol(2, EBX);
+stdout.puti32( EBX );
+
+end quadTable;
+
+
+

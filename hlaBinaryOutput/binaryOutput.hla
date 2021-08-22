@@ -1,0 +1,69 @@
+//File: binaryoutput.hla
+program binaryOutput
+#include ( "stdlib.hhf" )
+
+static
+iVal : int8;
+
+begin binaryOutput;
+
+//Prompt the user
+stdout.put("Input a decimal value: " );
+stdin.get( iVal );
+mov( iVal, BH );
+
+//Printing
+stdout.put( iVal, " is " );
+
+//one
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//two
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//three
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//four
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//print underscore
+stdout.put( "_" );
+
+//five
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//six
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//seven
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+//eight
+shl(1,BH);
+lahf();
+and(%0000_0001, AH);
+stdout.puti8(AH);
+
+end binaryOutput;

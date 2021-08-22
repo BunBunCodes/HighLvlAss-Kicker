@@ -1,0 +1,120 @@
+//File: sortNums.hla
+program sortNums;
+#include("stdlib.hhf");
+
+static
+num1 : int16;
+num2 : int16;
+num3 : int16;
+
+//this procedure swaps values so that they're in order
+//3 reference parameters
+//no stack alignment necessary
+procedure swapper( var x : int16; var y : int16; var z : int16 ); @nodisplay; @noframe;
+
+static
+retAddress : dword;
+place1 : int16;			//short for placeholder, how creative of me :D
+place2 : int16;
+dEDXReg : dword := 0;		//preserve EDX
+dECXReg : dword := 0;		//preserve ECX
+dEBXReg : dword := 0;		//preserve EBX
+dEAXReg : dword := 0;		//preserve EAX
+
+begin swapper;
+//entry sequence
+//preserve registers
+mov(EAX, dEAXReg);
+mov(EBX, dEBXReg);
+mov(ECX, dECXReg);
+mov(EDX, dEDXReg);
+pop(retAddress);		//return address stored in here
+pop(EAX);			//Z-address
+pop(EBX);			//Y-address
+pop(ECX);			//X-address
+push(retAddress);
+push(dEDXReg);			//preserving registers
+push(dECXReg);
+push(dEBXReg);
+push(dEAXReg);
+
+//begin sub-task
+//determining which value is smaller, z or y?
+mov([EAX], EDX);		//EDX = z
+mov(DX, place2);		//place1 = z
+mov([EBX], EDX);		//EDX = y
+cmp(place2, DX);		//is z < y?
+mov(DX, place1);		//place2 = y
+mov([ECX], EDX);		//EDX = x
+jl ZSmol;
+jmp YSmol;
+
+//second comparisons with X
+ZSmol:
+cmp(DX, place2);
+jl ZYSwap;			//no changes to x, swap z and y
+jmp ZXSwap;
+
+ZYSwap:
+mov(place1, [EAX]);		//a[2] = y, easier for me to think of it as an array
+mov(place2, [EBX]);		//a[1] = z
+jmp ENDStatement;
+
+ZXSwap:
+mov(DX, [EAX]);			//a[2] = x
+mov(place2, [ECX]);		//a[0] = z
+cmp(place1, DX);		//is y < x?
+jnl YXSwap;			//not true so swap
+jmp ENDStatement;		//no swap
+
+YXSwap:
+mov(place1, [EAX]);		//a[2] = y
+mov(DX, [EBX]);			//a[1] = x
+jmp ENDStatement;		//no swap
+
+//second comparisons with Y
+YSmol:
+cmp(DX, place1);		//is x < y?
+jnl XYSwap;			//not true so swap
+jmp ENDStatement;		//no changes to original values whatsoever
+
+XYSwap:
+mov(DX, [EBX]);			//a[1] = x
+mov(place1, [ECX]);		//a[0] = y
+cmp(DX, place2);		//is x < z?
+jnl XZSwap;			//not true so swap
+jmp ENDStatement;		//no swap
+
+XZSwap:
+mov(DX, [EAX]);			//a[2] = x
+mov(place2, [EBX]);		//a[1] = z
+ENDStatement:
+
+//exit sequence
+//restore registers
+pop(EAX);
+pop(EBX);
+pop(ECX);
+pop(EDX);
+//transfer control
+ret();
+end swapper;
+
+begin sortNums;
+stdout.put("Gimme X: ");
+stdin.get(num1);
+stdout.put("Gimme Y: ");
+stdin.get(num2);
+stdout.put("Gimme Z: ");
+stdin.get(num3);
+
+lea(EAX, num1);			//get address of num1
+push(EAX);
+lea(EAX, num2);			//get address of num2
+push(EAX);
+lea(EAX, num3);			//get address of num3
+push(EAX);
+stdout.put("After sorting, ");
+call swapper;
+stdout.put("X = ", num1, ", Y = ", num2, ", Z = ", num3);
+end sortNums;
