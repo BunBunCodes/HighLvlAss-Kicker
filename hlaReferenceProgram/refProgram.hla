@@ -1,0 +1,90 @@
+// Reference Parameter Template Solution For CS 17 Final
+// CS 17 Students must use this template as the basis for their solution. I hope it will help simplify your development task.
+// Please look at the two TODO: notes below
+
+program ReferenceProgram;
+#include( "stdlib.hhf" );
+static
+val1 : int16 := 0;
+val2 : int16 := 0;
+val3 : int16 := 0;
+// TODO: CS 17 Students add code below to implement this function
+// Several hints are supplied
+procedure make31IfDifference20OrMore( var i : int16; var j : int16; var k : int16 );@nodisplay; @noframe;
+static
+retAddress : dword;
+value : int16 := 31;
+diff : int16;
+dEDXReg : dword := 0;		//preserve EDX
+dECXReg : dword := 0;		//preserve ECX
+dEBXReg : dword := 0;		//preserve EBX
+dEAXReg : dword := 0;		//preserve EAX
+
+begin make31IfDifference20OrMore;
+// entry sequence
+// preserve registers used
+mov(EAX, dEAXReg);
+mov(EBX, dEBXReg);
+mov(ECX, dECXReg);
+mov(EDX, dEDXReg);
+pop(retAddress);		//this is the return address
+pop(EAX);			//k-address
+pop(EBX);			//j-address
+pop(ECX);			//i-address
+push(retAddress);		//push back the return address
+push(dEDXReg);			//preserving registers
+push(dECXReg);
+push(dEBXReg);
+push(dEAXReg);
+
+// begin sub-task
+mov([ECX], EDX);		//EDX = i
+mov(DX, diff);			//diff = i
+mov([EBX], EDX);		//EDX = j
+sub(DX, diff);			//diff - j
+mov([EAX], EDX);		//EDX = k
+sub(DX, diff);			//diff - k
+
+cmp(diff, 20);			// is diff < 20?
+jnl Make31;			// not true -> make everything 31
+jmp ENDState;
+
+Make31:
+mov(value, [EAX]);
+mov(value, [EBX]);
+mov(value, [ECX]);
+
+ENDState:
+// restore the registers used
+pop(EAX);
+pop(EBX);
+pop(ECX);
+pop(EDX);
+ret();
+
+end make31IfDifference20OrMore;
+
+begin ReferenceProgram; 
+
+mov(1, val1);
+mov(7, val2);
+mov(3, val3);
+
+// TODO: push parameters to the function. Please remember that these parameters must be passed by-reference.
+lea(EAX, val1);
+push(EAX);
+lea(EAX, val2);
+push(EAX);
+lea(EAX, val3);
+push(EAX);
+call make31IfDifference20OrMore;
+
+stdout.put( "the first parameter = " );
+stdout.put(val1);
+stdout.put( " the second parameter = " );
+stdout.put(val2);
+stdout.put( " the third parameter = " );
+stdout.put(val3);
+stdout.newln();
+
+end ReferenceProgram;

@@ -1,0 +1,79 @@
+//File: safinder.hla
+program surfaceArea;
+#include("stdlib.hhf");
+static
+
+val1 : real32;
+val2 : real32; 
+
+//Function surfaceFinder
+procedure surfaceFinder( r: real32; h : real32 ); @nodisplay; @noframe; 
+static
+returnAddress : dword;		
+s : real32;
+c : real32;
+cyl : real32;
+begin surfaceFinder;
+
+//storing values
+pop(returnAddress);
+pop(h);			//popping h
+pop(r);			//popping r
+push(returnAddress);
+finit();
+
+//sphere arithmetic
+fld(r);
+fld(r);			//duplicate r
+fmul();			//compute r^2
+fldpi();		//load pi
+fmul();
+fld(4.0);		//load 4.0
+fmul();
+fstp(s);		//store result in s
+stdout.put("Surface Area of a sphere =");
+stdout.putr32(s, 10, 5);
+stdout.put(" square inches", nl);
+
+//cube arithmetic
+fld(h);			//load h
+fld(h);			//duplicate h
+fmul();			//compute h^2
+fld(6.0);		//load 6.0
+fmul();		
+fstp(c);		//store result in c
+stdout.put("Surface Area of a cube =");
+stdout.putr32(c, 10, 5);
+stdout.put(" square inches", nl);
+
+//cylinder arithmetic
+fld(r);			//load r
+fld(h);			//load h
+fadd();			//add r and h
+fld(r);			//load r again
+fmul();			//multiply r with sum
+fldpi();		//load pi
+fmul();
+fld(2.0);		//load 2.0
+fmul(); 		
+fstp(cyl);
+stdout.put("Surface Area of a cylinder =");
+stdout.putr32(cyl, 10, 5);
+stdout.put(" square inches");
+
+ret();
+end surfaceFinder;
+
+//Main Program
+
+begin surfaceArea;
+
+//Prompt user
+stdout.put("Lemme calculate the surface area of various things in inches!", nl, "Gimme r: ");
+stdin.get(val1);
+stdout.put("Gimme h: ");
+stdin.get(val2);
+push(val1);	
+push(val2);
+call surfaceFinder;
+end surfaceArea;

@@ -1,0 +1,74 @@
+//File: inanddec.hla
+program incAndDec;
+#include ("stdlib.hhf");
+
+static
+n : int8;
+
+begin incAndDec;
+
+//Prompt the user
+stdout.put("Feed me: ");
+stdin.get(n);
+
+//Increasing Outer Loop
+ForLp:
+InitializeForLp:
+mov(1, CL);
+ForLpTerminationTest:
+cmp(CL, n);
+jg ForLpDone;
+ForLpBody:
+
+//Inner loop
+ForLp2:
+IntitializeForLp2:
+mov(0, CH);
+ForLpTerminationTest2:
+cmp(CH, CL);
+jnl ForLpDone2;
+ForLp2Body:
+stdout.puti8(CL);
+ForLpIncrement2:
+add(1, CH);
+jmp ForLpTerminationTest2;
+ForLpDone2:
+
+ForLpIncrement:
+add(1, CL);
+jmp ForLpTerminationTest;
+ForLpDone:
+
+//Note: We will be ovewriting the registers CL and CH
+//	Additionally we will subtract from 1 from n, bc its easier
+sub(1, n);
+
+//Decreasing Outer Loop
+ForLp3:
+InitializeForLp3:
+mov(n, CL);
+ForLpTerminationTest3:
+cmp(CL, 0);
+je ForLpDone3;
+ForLp3Body:
+
+//Inner Loop
+ForLp4:
+InitializeForLp4:
+mov(CL, CH);
+ForLpTerminationTest4:
+cmp(CH, 0);
+je ForLpDone4;
+ForLp4Body:
+stdout.puti8(CL);
+ForLpIncrement4:
+sub(1, CH);
+jmp ForLpTerminationTest4;
+ForLpDone4:
+
+ForLpIncrement3:
+sub(1, CL);
+jmp ForLpTerminationTest3;
+ForLpDone3:
+
+end incAndDec;

@@ -1,0 +1,105 @@
+//File: feeCalc.hla
+program feeCalc
+#include ("stdlib.hhf")
+
+static
+n : int16;
+amt : int16;
+park :int16;
+
+begin feeCalc;
+
+//Prompt the user
+stdout.put("Feed me (2 hex digits with bits prsseeee): ");
+//info stored here
+stdin.get(BX);
+//total will be stored here
+mov(0, CX);
+
+//I thought shr would store what was pushed out in the carry bit
+//Hence jump if carry bit is equal to 1
+//I dont have enough time to play around with this code, so
+//I'll turn in what I have atm and work on improving it
+//My Label statements work though!
+
+shr(1, BH);
+lahf();
+jc ThenLabel;
+jmp ElseLabel;
+
+ThenLabel:
+mov(45, park);
+mov(52, CX);
+shr(1,BH);
+
+jc ThenLabel2;
+jmp ElseLabel2;
+
+ThenLabel2:
+stdout.put("Summer Semester", nl);
+jmp ENDIFLabel2;
+ElseLabel2:
+stdout.put("Winter Semester", nl);
+ENDIFLabel2:
+jmp ENDIFLabel;
+
+ElseLabel:
+mov(85, park);
+mov(55, CX);
+shr(1, BH);
+
+jc ThenLabel3;
+jmp ElseLabel3;
+
+ThenLabel3:
+stdout.put("Spring Semester", nl);
+jmp ENDIFLabel3;
+ElseLabel3:
+stdout.put("Fall Semester", nl);
+ENDIFLabel3:
+ENDIFLabel:
+
+stdout.puti8(BL);
+stdout.put(" units", nl);
+
+shr(1, BH);
+jc ThenLabel4;
+jmp ElseLabel5;
+ThenLabel4:
+stdout.put("CA Resident", nl);
+mov(46, amt);
+jmp ENDIFLabel4;
+ElseLabel4:
+stdout.put("Non-Resident", nl);
+mov(377, amt);
+ENDIFLabel4:
+
+shr(1, BH);
+jc ThenLabel5;
+jmp ElseLabel5;
+ThenLabel5:
+stdout.put("Parking", nl);
+add(park, CX);
+jmp ENDIFLabel5;
+ElseLabel5:
+stdout.put("No Parking", nl);
+ENDIFLabel5:
+
+ForLp:
+InitializeForLp:
+mov(1, DL);
+ForLpTerminationTest:
+cmp(DL, BL);
+jg ForLpDone;
+ForLpBody:
+add(amt, CX);
+ForLpIncrement:
+add(1, DL);
+jmp ForLpTerminationTest;
+ForLpDone:
+
+stdout.put("Total Fees = $");
+stdout.puti16(CX);
+
+
+end feeCalc;

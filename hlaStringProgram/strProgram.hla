@@ -1,0 +1,120 @@
+// String Parameter Template Solution For CS 17 Final
+// CS 17 Students must use this template as the basis for their solution.
+// I hope it will help simplify your development task.
+
+// Please look at the two TODO: notes below
+
+program StringProgram;
+
+#include( "stdlib.hhf" );
+// The file cs17Final.hla is downloadable from the hyperlink shown above.
+// Place it in the same folder as this hla file you are working on
+
+#include( "cs17Final.hla" );
+
+static stringData : dword;
+
+// TODO: CS 17 Students add code below to implement this function
+// Several hints are supplied
+
+procedure getLargest( stringData : dword ); @nodisplay; @noframe;
+static
+retAddress : dword;
+wDXRegister  : word  := 0;	// preserve DX
+dEBXRegister : dword := 0;	// preserve EBX
+dECXRegister : dword := 0;	// preserve ECX
+
+begin getLargest;
+// entry sequence
+// preserve registers used
+mov(EBX, dEBXRegister);
+mov(ECX, dECXRegister);
+mov(DX, wDXRegister);
+pop(retAddress);	   	// This is the return address 
+pop(EBX);			// This is the base address of the string
+// push back the return address
+push(retAddress);
+// preserve registers
+push(dEBXRegister);
+push(dECXRegister);
+push(wDXRegister);
+
+// begin sub-task
+
+// count null-terminated string
+mov(0, DX);            	// EBX will be the address of string[i]
+mov($41, AL);		//AL stores 'A'
+CountLp:
+cmp([ EBX ], DH);
+je CountEndLp;
+mov([EBX], ECX);	//ECX = a[i]
+cmp(CL, AL); 		//is a[i] < largest?
+jnl Larger;		//not true so new largest value
+jmp Increment;
+Larger:
+mov(CL, AL);		// new large value \o/
+Increment:
+inc(EBX);
+jmp CountLp;
+CountEndLp:
+
+// leave the count in EAX
+// restore the registers used
+pop(DX);
+pop(ECX);
+pop(EBX);
+ret();
+
+ 
+end getLargest;
+
+ 
+begin StringProgram; 
+
+stdout.put( "Please enter a string to process", nl );
+
+// this code allocates a string of size 80
+
+mov( @size( int8 ), AL );
+mov( 80, BL );
+inc( BL );
+mul( BL );
+mov( 0, EBX );
+mov( AX, BX );
+malloc( EBX );
+mov( EAX, stringData );
+
+// let's try reading a value into the string
+mov( stringData, EAX );
+push( EAX );
+mov( 80, CX );
+push( CX );
+
+call gets;
+
+// print the string
+
+stdout.put( "----> here is the string you entered: " );
+
+mov( stringData, EAX );
+push( EAX );
+call puts;
+
+stdout.newln();
+
+// initialize EAX before calling the function.
+
+mov( 0, EAX );
+
+
+// TODO: send a string parameter to the function
+mov(stringData, ECX);
+push(ECX);			//pushing stringData
+call getLargest;
+
+// show the results
+stdout.put("result=");
+stdout.putc(AL);
+stdout.newln();
+
+end StringProgram;

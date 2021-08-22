@@ -1,0 +1,97 @@
+//File: gradeConverter.hla
+program GradeConverter;
+#include("stdlib.hhf");
+
+static
+per : real32;
+
+procedure grader( percentage : real32 ); @nodisplay; @noframe;
+static
+returnAddress : dword;		//32bits
+F : real32 := 59.99;
+D : real32 := 69.99;
+C : real32 := 79.99;
+B : real32 := 89.99;
+
+begin grader;
+pop(returnAddress);
+pop(percentage);
+push(returnAddress);
+
+finit();
+fld(percentage);
+fld(F);
+fcomp();			//compare percentage with F
+fstsw(AX);
+sahf();				//EFLAGS
+setb(AL);
+cmp(AL, 1);			//if AL = 0, then AL = 'F'
+jne setFGrade;
+jmp checkD;
+
+setFGrade:
+mov($46, AL);
+jmp ENDStatement;
+
+checkD:
+fld(percentage);
+fld(D);
+fcomp();
+fstsw (AX);
+sahf();
+setb (AL);
+cmp(AL, 1);
+jne setDGrade;
+jmp checkC;
+
+setDGrade:
+mov($44, AL);
+jmp ENDStatement;
+
+checkC:
+fld(percentage);
+fld(C);
+fcomp();
+fstsw (AX);
+sahf();
+setb (AL);
+cmp(AL, 1);
+jne setCGrade;
+jmp checkB;
+
+setCGrade:
+mov($43, AL);
+jmp ENDStatement;
+
+checkB:
+fld(percentage);
+fld(B);
+fcomp();
+fstsw(AX);
+sahf();
+setb(AL);
+cmp(AL, 1);
+jne setBGrade;
+jmp setAGrade;
+
+setBGrade:
+mov($42, AL);
+jmp ENDStatement;
+
+setAGrade:
+mov($41, AL);
+
+ENDStatement:
+//answer will be stored in register AL
+ret();
+end grader;
+
+begin GradeConverter;
+
+stdout.put("Feed me: ");	//User input
+stdin.get(per);			//Store in real32 var
+push(per);			//push var per
+call grader;
+stdout.put("That's the grade: ");
+stdout.putc(AL);
+end GradeConverter;

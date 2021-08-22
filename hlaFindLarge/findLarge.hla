@@ -1,0 +1,101 @@
+//File: findLarge.hla
+Program findLarge;
+#include("stdlib.hhf");
+static
+val1 : int8 := 0;
+val2 : int8 := 0;
+val3 : int8 := 0;
+val4 : int8 := 0;
+
+//This procedure selects the largest value of the 4
+procedure largest( value1 : int8; value2 : int8; value3 : int8; value4 : int8); @nodisplay; @noframe;
+static
+returnAddress : dword;
+temp : int16;
+registerVal : dword;
+
+begin largest;
+//entry sequence
+//preserve resgisters -- EBX
+mov(EBX, registerVal);
+//acquire parameters
+pop(returnAddress);
+pop(temp);		//this is val4
+mov(temp, BX);
+mov(BL, value4);
+pop(temp);		//this is val3
+mov(temp, BX);
+mov(BL, value3);
+pop(temp);		//this is val2
+mov(temp, BX);
+mov(BL, value2);
+pop(temp);		//this is val1
+mov(temp, BX);
+mov(BL, value1);
+push(returnAddress);
+push(registerVal);
+
+mov(value1, DH);
+//if statement
+cmp(value2, DH);
+jg ThenLabel;
+jmp SecondIf;
+
+ThenLabel:
+mov(value2, DH);
+
+SecondIf:
+cmp(value3, DH);
+jg ThenLabel2;
+jmp ThirdIf;
+
+ThenLabel2:
+mov(value3, DH);
+
+ThirdIf:
+cmp(value4, DH);
+jg ThenLabel3;
+jmp ENDIFLabels;
+
+ThenLabel3:
+mov(value4, DH);
+
+ENDIFLabels:
+//pop preserved registers -- EBX
+pop(EBX);
+
+ret();
+end largest; 
+
+//Main Function
+begin findLarge;
+//ask for user input
+stdout.put("Gimme a value: ");
+stdin.get(val1);
+stdout.put("Gimme a second value: ");
+stdin.get(val2);
+stdout.put("Gimme a third value: ");
+stdin.get(val3);
+stdout.put("Gimme a final value: ");
+stdin.get(val4);
+
+//only 16-bit values can be pushed
+mov(0, BX);		
+mov(val1, BL);		//storing val1 in L.O.
+push(BX);		//pushing val1 - 16 bits
+mov(0, BX);
+mov(val2, BL);		//storing val2 in L.O.
+push(BX);		//pushiing val2 - 32bits
+mov(0, BX);
+mov(val3, BL);		//storing val3 in L.O.
+push(BX);		//pushing val3 - 16bits
+mov(0, BX);
+mov(val4, BL);		//storing val4 in L.O.
+push(BX);		//pushing val4 - 32bits
+
+call largest;		//calling procedure
+stdout.put("largest( ", val1, ", ", val2, ", ", val3, ", ", val4, " ) equals ");
+stdout.puti8(DH);
+stdout.put("!");
+
+end findLarge;

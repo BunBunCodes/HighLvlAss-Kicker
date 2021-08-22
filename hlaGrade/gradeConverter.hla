@@ -1,0 +1,62 @@
+//File: gradeConverter.hla
+program GradeConverter;
+#include("stdlib.hhf");
+
+static
+per : real32;
+
+procedure grader( percentage : real32 ); @nodisplay; @noframe;
+static
+returnAddress : dword;		//32 bits
+count : real32 := 60.0;		//count will increase 
+
+begin grader;
+pop(returnAddress);		//pop and store in var
+pop(percentage);		//pop and store parameter
+push(returnAddress);
+//answer will be stored in register AL
+
+mov($45, AL);			//char 'E'
+//while loop
+WhileLp:
+WhileLpTermination:
+//is percentage >= count
+fld(count);
+fld(percentage);
+fcomp();
+fstsw(AX);			//copy status into AX
+sahf();				//copy AX into EFLAGS
+setnae(AL);
+cmp(AL, 1);
+je WhileLpDone;			//end loop
+
+WhileLpBody:
+dec(BL);
+fld(count);
+fld(10.0);
+faddp();
+fst(count);
+jmp WhileLp;
+
+WhileLpDone:
+
+cmp(AL, 'E');
+je ThenLabel;
+jmp ENDIFLabel;
+
+ThenLabel:
+inc(AL);                    //if the char is E then increase by 1, for F
+ENDIFLabel:
+
+ret();
+end grader;
+
+begin GradeConverter;
+
+stdout.put("Feed me: ");	//User input
+stdin.get(per);			//Store in real32 var
+push(per);			//push var per
+call grader;
+stdout.put("That's the grade: ");
+stdout.putc(AL);
+end GradeConverter;

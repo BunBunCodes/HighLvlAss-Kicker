@@ -1,0 +1,15 @@
+//File: mascot.hla
+program mascot;
+#include( "stdlib.hhf");
+
+begin mascot;
+
+//No variable needed, so we can bypass static declaration
+//Begin printing of mascot: MOLANG
+stdout.put( "M   M   OOO   L     AAA   N   N   GGGG", nl );
+stdout.put( "MM MM  O   O  L    A   A  NN  N  G    ", nl );
+stdout.put( "M M M  O   O  L    AAAAA  N N N  G  GG", nl );
+stdout.put( "M   M  O   O  L    A   A  N  NN  G   G", nl );
+stdout.put( "M   M   OOO   LLL  A   A  N   N   GGGG", nl );
+
+end mascot;
